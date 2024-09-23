@@ -4,9 +4,11 @@ import Home from "./components/Home";
 import { useState } from "react";
 import Cart from "./components/Cart";
 import { useEffect } from "react";
+import Products from "./components/Products";
 function App() {
   const [apiRecieve, setApiReceive] = useState([]);
   const [cartValue, setCartValue] = useState([]);
+  const [warn, setWarn] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("https://fakestoreapi.com/products");
@@ -18,12 +20,17 @@ function App() {
   const cartAdded = (i) => {
     let cartadded = true;
     cartValue?.map((item) => (item.id === i.id ? (cartadded = false) : null));
-    cartadded ? setCartValue([...cartValue, i]) : null;
+    cartadded ? setCartValue([...cartValue, i]) : setWarn(true);
   };
   function removefun(i) {
     let deleted = cartValue?.filter((item) => item.id !== i.id);
     setCartValue(deleted);
   }
+  useEffect(() => {
+    setTimeout(() => {
+      setWarn(false);
+    }, 3000);
+  }, [warn]);
   return (
     <>
       <Routes>
@@ -36,6 +43,7 @@ function App() {
               cartValue={cartValue}
               setCartValue={setCartValue}
               cartAdded={cartAdded}
+              warn={warn}
             />
           }
         />
@@ -43,6 +51,7 @@ function App() {
           path="/cart"
           element={<Cart cartValue={cartValue} removefun={removefun} />}
         />
+        <Route path="/products/:id" element={<Products />} />
       </Routes>
     </>
   );

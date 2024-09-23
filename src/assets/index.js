@@ -1,2 +1,3 @@
 import online from "./online.jpg";
-export { online };
+import newLogo from "./newLogo.jpg";
+export { online, newLogo };
